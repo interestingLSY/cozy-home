@@ -6,9 +6,20 @@
 PROXY="http://localhost:20172"
 
 # git proxy
+git config --global user.email "shengyuliu@deepseek.com"
+git config --global user.name "Shengyu Liu"
 git config --global http.proxy $PROXY
 git config --global https.proxy $PROXY
 git config --global http.sslVerify false
+
+cat <<EOF > ~/.ssh/config
+Host github.com
+    HostName ssh.github.com
+    Port 443
+    ServerAliveInterval 55
+    ForwardAgent yes
+    ProxyCommand nc --proxy 127.0.0.1:20172 %h %p
+EOF
 
 # wget proxy
 cat <<EOF > ~/.wgetrc
