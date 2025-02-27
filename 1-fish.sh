@@ -29,4 +29,13 @@ then
 fi
 EOF
 
+cat <<EOF > ~/.bashrc
+export PATH=$PATH:~/.local/bin
+# DS_PROXY="http://deepseek:+ogyigDac5@ss.deepseek.com:3128"
+DS_PROXY="http://localhost:20172"
+alias WITH_PROXY='https_proxy=${DS_PROXY} http_proxy=${DS_PROXY} HTTPS_PROXY=${DS_PROXY} HTTP_PROXY=${DS_PROXY} ALL_PROXY=${DS_PROXY} all_proxy=${DS_PROXY}'
+alias PROXY_ON='export https_proxy=${DS_PROXY}; export http_proxy=${DS_PROXY}; export HTTPS_PROXY=${DS_PROXY}; export HTTP_PROXY=${DS_PROXY}; export ALL_PROXY=${DS_PROXY}; export all_proxy=${DS_PROXY}'
+alias PROXY_OFF='unset https_proxy; unset http_proxy; unset HTTPS_PROXY; unset HTTP_PROXY; unset ALL_PROXY; unset all_proxy'
+EOF
+
 chsh -s ${HOME}/.local/bin/fish
