@@ -1,24 +1,32 @@
+#!/bin/bash
 . common.sh
 
-CUR_PATH=$(pwd)
+REPO_PATH=$(pwd)
 echo "Installing fish..."
 cd ~/temp
-wget -c "https://github.com/xxh/fish-portable/releases/download/3.6.1/fish-portable-musl-alpine-Linux-x86_64.tar.gz" -O fish.tag.gz
-mkdir -p fish
-tar xf fish.tag.gz -C fish
-cp -r fish/bin/* ~/.local/bin/.
-cp -r fish/etc/* ~/.local/etc/.
-cp -r fish/share/* ~/.local/share/.
+cp ${REPO_PATH}/assets/fish/fish-static-linux-x86_64.tar.xz .
+rm -f fish fish_indent fish_key_reader
+tar -xvf fish-static-linux-x86_64.tar.xz
+mv ~/temp/fish ~/.local/bin/.
+mv ~/temp/fish_indent ~/.local/bin/.
+mv ~/temp/fish_key_reader ~/.local/bin/.
 
-cd ${CUR_PATH}
+cd ${REPO_PATH}
 mkdir -p ~/.config/fish/
-cp templates/config.fish ~/.config/fish/config.fish
-echo "fish_add_path ${HOME}/.local/bin" >> ~/.config/fish/config.fish
+cp assets/fish/config.fish ~/.config/fish/config.fish
+cp assets/fish/fish_variables ~/.config/fish/fish_variables
+mkdir -p ~/.config/fish/functions
+cp -r assets/fish/functions/* ~/.config/fish/functions/.
 
-touch ~/startup.sh
-chmod +x ~/startup.sh
-echo "#!/bin/bash" > ~/startup.sh
-echo "export HOME=${HOME}" >> ~/startup.sh
-echo "${HOME}/.local/bin/fish" >> ~/startup.sh
+echo "Appending content to ~/.profile. Please manually check whether content inside duplicates"
+cat <<EOF >> ~/.profile
+export PATH=\$PATH:~/.local/bin
 
+# Switch to fish if is interactive
+if [[ $- == *i* ]]
+then
+    fish
+fi
+EOF
 
+chsh -s ${HOME}/.local/bin/fish
